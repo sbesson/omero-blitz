@@ -665,8 +665,20 @@ public class ManagedImportRequestI extends ImportRequest implements IRequest {
     public Object pixelData(PixelDataJob pdj) throws Throwable {
         StopWatch sw = new Slf4JStopWatch();
 
+        log.info("isMinMaxSet: {}", reader.isMinMaxSet() );
+        log.info("noStatsInfo: {}", noStatsInfo );
         if (!reader.isMinMaxSet() && !noStatsInfo)
         {
+            log.info("Populating min/max");
+            
+            store.populateMinMax();
+        }
+
+        log.info("isMinMaxSet: {}", reader.isMinMaxSet() );
+        log.info("noStatsInfo: {}", noStatsInfo );
+        if (!reader.isMinMaxSet() && !noStatsInfo)
+        {
+            log.info("Parsing the data");
             // Parse the binary data to generate min/max values
             int seriesCount = reader.getSeriesCount();
             for (int series = 0; series < seriesCount; series++) {
@@ -698,10 +710,7 @@ public class ManagedImportRequestI extends ImportRequest implements IRequest {
 
         store.updatePixels(pixList);
 
-        if (!reader.isMinMaxSet() && !noStatsInfo)
-        {
-            store.populateMinMax();
-        }
+
 
 
         sw.stop("omero.import.request.pixels");
