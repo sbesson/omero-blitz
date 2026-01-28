@@ -674,6 +674,8 @@ public class ManagedImportRequestI extends ImportRequest implements IRequest {
             // Parse the binary data to generate min/max values
             int seriesCount = reader.getSeriesCount();
             for (int series = 0; series < seriesCount; series++) {
+                reader.setSeries(series);
+                continue;
                 ImportSize size = new ImportSize(fileName,
                         pixList.get(series), reader.getDimensionOrder());
                 Pixels pixels = pixList.get(series);
@@ -795,7 +797,6 @@ public class ManagedImportRequestI extends ImportRequest implements IRequest {
              * (long) reader.getSizeY()) > maxPlaneSize) {
             return null;
         }
-        return null;
 
         int bytesPerPixel = getBytesPerPixel(reader.getPixelType());
         MessageDigest md;
