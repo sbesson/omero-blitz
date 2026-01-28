@@ -9,15 +9,25 @@ on:
 
 jobs:
   build:
-    - uses: ome/action-workflows/.github/workflows/gradle_build.yml@main
-      with:
-        install-ice: true
-    - name: Upload Artifact to GitHub
-      uses: actions/upload-artifact@v4
-      with:
-        name: Artifact
-        path: build/libs/*
-        retention-days: 30
+    strategy:
+      matrix:
+        java: [11]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      ICE_HOME: /opt/ice-3.6.5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Ice and Ice python binding
+        uses: ome/action-ice@main
+      - name: Run commands
+        run: ./gradlew build
+      - name: Upload Artifact to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifact
+          path: build/libs/*
+          retention-days: 30
   publish_snapshots:
     if: ${{ github.ref == 'refs/heads/master' && github.repository_owner == 'ome' }}
     needs: build
