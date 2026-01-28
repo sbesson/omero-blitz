@@ -9,25 +9,25 @@ on:
 
 jobs:
   build:
-    uses: ome/action-workflows/.github/workflows/gradle_build.yml@main
-    with:
-      install-ice: true
-  publish_snapshots:
-    if: ${{ github.ref == 'refs/heads/master' && github.repository_owner == 'ome' }}
-    needs: build
-    - uses: ome/action-workflows/.github/workflows/gradle_publish.yml@main
-      with:
+    - uses: ome/action-workflows/.github/workflows/gradle_build.yml@main
+    - with:
         install-ice: true
-        ARTIFACTORY_URL: "snapshots"
-      secrets:
-        ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-        ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
     - name: Upload Artifact to GitHub
       uses: actions/upload-artifact@v4
       with:
         name: Artifact
-        path: build/libs/*
+        path: build/*
         retention-days: 30
+  publish_snapshots:
+    if: ${{ github.ref == 'refs/heads/master' && github.repository_owner == 'ome' }}
+    needs: build
+    uses: ome/action-workflows/.github/workflows/gradle_publish.yml@main
+    with:
+      install-ice: true
+      ARTIFACTORY_URL: "snapshots"
+    secrets:
+      ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+      ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
   publish:
     needs: build
     if: startsWith(github.ref, 'refs/tags') && github.repository_owner == 'ome'
