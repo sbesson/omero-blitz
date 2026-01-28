@@ -668,7 +668,7 @@ public class ManagedImportRequestI extends ImportRequest implements IRequest {
 
         log.info("isMinMaxSet: {}", reader.isMinMaxSet() );
         log.info("noStatsInfo: {}", noStatsInfo );
-        if (!reader.isMinMaxSet() && !noStatsInfo)
+        if (!reader.isMinMaxSet() && !noStatsInfo && false)
         {
             log.info("Parsing the data");
             // Parse the binary data to generate min/max values
