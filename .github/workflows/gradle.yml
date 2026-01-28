@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     - uses: ome/action-workflows/.github/workflows/gradle_build.yml@main
-    - with:
+      with:
         install-ice: true
     - name: Upload Artifact to GitHub
       uses: actions/upload-artifact@v4
